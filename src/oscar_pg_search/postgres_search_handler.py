@@ -91,8 +91,9 @@ class PostgresSearchHandler(SimpleProductSearchHandler):
 
     def get_paginator(self, *args, **kwargs):
         paginator = super().get_paginator(*args, **kwargs)
-        partner_pk = self.request.user.partner.pk or 0
-        path = self.request.get_full_path()
+        request = self.request
+        partner_pk = request.user.partner.pk if request is not None else 0
+        path = request.get_full_path() if request is not None else ''
         count = cache.get_or_set(
             f'partner{partner_pk}_{path}_result_count',
             lambda: paginator.count,

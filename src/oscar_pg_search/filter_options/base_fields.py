@@ -25,7 +25,8 @@ class MultipleChoiceFieldBase(forms.MultipleChoiceField):
         """
         This is running after the result was created by manager.
         """
-        path = self.manager.request.get_full_path()
+        request = self.manager.request
+        path = request.get_full_path() if request is not None else ''
         key = f'{path}_product_filter_choices__{self.code}'
         partner = getattr(self.manager, 'main_partner', None)
         if partner:
